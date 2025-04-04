@@ -1,57 +1,40 @@
 const express = require("express");
-const users = require("./MOCK_DATA.json")
+// let users = require("./MOCK_DATA.json");
+
+const {logReqRes} = require("./middlewares/index");
+const {connectMongoDB} = require("./connection")
+const userRouter = require("./routes/user");
 
 const app = express();
 const PORT = 8000;
 
+// Connection
+connectMongoDB('mongodb://127.0.0.1:27017/project-1')
+
+
+// Middleware - Plugin
+app.use(express.urlencoded({ extended: false }));
+app.use(logReqRes("log.txt"))
+
+// app.use((req, res, next) => {
+//     console.log("Hello from middleware 1");
+//     // return res.json({msg: "Hello from middleware 1"}) it end the req res cycle here!
+//     next();
+// }) 
+
+// app.use((req, res, next) => {
+//     console.log("Hello from middleware 2");
+//     // db query
+//     // credit card info
+//     // req.creditCardNumber = "123";
+//     // return res.json("Hey")
+//     next();
+// })
+
+
 // Routes
-app.get("/users", (req, res) => {
-    const html = `
-    <ul>
-        ${users.map(user => `<li>${user.first_name}</li>`).join("")}
-    </ul>
-    `;
-    res.send(html);
-})
+app.use('/users', userRouter);
 
-// REST API  
-app.get("/api/users", (req, res) => {
-    return res.json(users);
-})
-
-// :id - dynamic path parameters
-// app.get("/api/users/:id", (req, res) => {
-//     const id = Number(req.params.id);
-//     const user = users.find(user => user.id === id);
-//     return res.json(user);
-// })
-
-app.post("/api/users", (req, res) => {
-    // TODO: create new user
-    res.json({ status: "pending" });
-})
-
-// app.patch("/api/users/:id", (req, res) => {
-//     // TODO: edit the user with ID
-//     res.json({status: "pending"});
-// })
-
-// app.delete("/api/users/:id", (req, res) => {
-//     // TODO: delete the user with ID
-//     res.json({status: "pending"});
-// })
-
-app.route("/api/users/:id").get((req, res) => {
-    const id = Number(req.params.id);
-    const user = users.find(user => user.id === id);
-    return res.json(user);
-}).patch((req, res) => {
-    // TODO: edit the user with ID
-    res.json({ status: "pending" });
-}).delete((req, res) => {
-    // TODO: delete the user with ID
-    res.json({ status: "pending" });
-})
 
 app.listen(PORT, () => {
     console.log("Server started at: ", PORT)

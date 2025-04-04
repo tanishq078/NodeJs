@@ -16,3 +16,8 @@ PATCH /users/1 - edit the user with ID 1
 
 DELETE /users/1 - delete the user wiht ID 1
 
+// DB
+
+Schema - define the structure
+    using this schema we create a model
+    using this Model we do CRUD operations

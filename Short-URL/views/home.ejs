@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d0d0d;
+            color: #ff0000;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px #ff0000;
+        }
+        form {
+            background: rgba(255, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 15px #ff0000;
+            animation: pulse 2s infinite alternate;
+        }
+        label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 10px;
+            width: 250px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            color: white;
+            background: #ff0000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #ff0000;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            box-shadow: 0 0 15px #ff0000;
+            animation: fadeInUp 1.5s ease-in-out;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #ff0000;
+        }
+        th {
+            background: #660000;
+            color: white;
+            font-size: 1.2em;
+        }
+        td {
+            font-size: 1em;
+            color: #ff4444;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulse {
+            from { box-shadow: 0 0 15px #ff0000; }
+            to { box-shadow: 0 0 25px #ff4444; }
+        }
+    </style>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <% if (locals.id) { %>
+        <p>URL generated: <a href="http://localhost:8001/url/<%= id %>" style="color:#ff4444; text-decoration:none; font-weight:bold;">http://localhost:8001/url/<%= id %></a></p>
+    <% } %>
+    <div>
+        <form method="POST" action="/url">
+            <label>Enter your original URL</label>
+            <input type="text" name="url" placeholder="https://example.com">
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+    <div>
+        <% if (locals.urls) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S. No</th>
+                        <th>Short ID</th>
+                        <th>Redirect</th>
+                        <th>Clicks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% urls.forEach((url, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= url.shortID %></td>
+                            <td><a href="<%= url.redirectedURL %>" style="color:#ff4444; text-decoration:none;"> <%= url.redirectedURL %> </a></td>
+                            <td><%= url.visitHistory.length %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</body>
+</html>
