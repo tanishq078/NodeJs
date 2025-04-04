@@ -8,8 +8,10 @@ const URL = require("./models/url");
 const app = express();
 const PORT = 8001;
 
-connectToMongoDB("mongodb+srv://stanishq69:YQvPetbRLOMUUKxG@cluster0.aosyekh.mongodb.net/short-url").then(() => {
+connectToMongoDB(process.env.MONGODB_URI).then(() => {
     console.log("MongoDB connected!");
+}).catch(err => {
+    console.error("MongoDB Connection Error:", err);
 });
 
 app.set("view engine", "ejs");
